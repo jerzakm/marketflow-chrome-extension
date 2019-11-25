@@ -1,0 +1,41 @@
+{
+  "name": "marketflow-chrome-extension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "jest.config.js",
+  "scripts": {
+    "watch": "webpack --config webpack/webpack.dev.js --watch",
+    "build": "webpack --config webpack/webpack.prod.js",
+    "clean": "rimraf dist",
+    "test": "npx jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerzakm/marketflow-chrome-extension.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jerzakm/marketflow-chrome-extension/issues"
+  },
+  "homepage": "https://github.com/jerzakm/marketflow-chrome-extension#readme",
+  "dependencies": {
+    "jquery": "^3.4.1",
+    "moment": "~2.24.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.86",
+    "@types/jest": "^24.0.19",
+    "@types/jquery": "^3.3.30",
+    "copy-webpack-plugin": "^5.0.3",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
+    "rimraf": "^2.6.3",
+    "ts-loader": "^5.4.5",
+    "typescript": "~3.4.5",
+    "webpack": "~4.17.2",
+    "webpack-cli": "~3.1.0",
+    "webpack-merge": "~4.2.1"
+  }
+}
