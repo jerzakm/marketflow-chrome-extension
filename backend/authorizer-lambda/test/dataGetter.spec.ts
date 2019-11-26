@@ -1,10 +1,10 @@
-import { handler } from '../src/handler'
 import { expect } from 'chai'
 import * as sinon from 'sinon'
 import 'mocha'
 import { APIGatewayProxyEvent } from 'aws-lambda'
+import { handler } from '../src/dataGetter'
 
-describe('handler', () => {
+describe('dataGetter', () => {
 
   const dummyEvent: APIGatewayProxyEvent = {
     headers: {},
