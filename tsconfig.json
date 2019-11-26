@@ -6,7 +6,7 @@
         "sourceMap": false,
         "rootDir": "src",
         "outDir": "dist/js",
-        "noEmitOnError": true,
-        "typeRoots": [ "node_modules/@types" ]
+        "noEmitOnError": false,
+        "typeRoots": ["node_modules/@types"]
     }
 }

@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/jerzakm/marketflow-chrome-extension#readme",
   "dependencies": {
+    "chart.js": "^2.9.3",
     "jquery": "^3.4.1",
     "moment": "~2.24.0"
   },
@@ -30,8 +31,8 @@
     "@types/jquery": "^3.3.30",
     "copy-webpack-plugin": "^5.0.3",
     "jest": "^24.9.0",
-    "ts-jest": "^24.1.0",
     "rimraf": "^2.6.3",
+    "ts-jest": "^24.1.0",
     "ts-loader": "^5.4.5",
     "typescript": "~3.4.5",
     "webpack": "~4.17.2",
