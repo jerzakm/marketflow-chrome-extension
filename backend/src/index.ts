@@ -1,4 +1,5 @@
-import { getAuth } from "./allegroHandlers/auth"
+import { restTokenAuth } from "./allegroHandlers/restAuth"
+import { createSoapClient } from "./allegroHandlers/soapAuth"
 
 const app = require('express')()
 
@@ -35,8 +36,9 @@ const port = process.env.PORT || 5000
 app.listen(port, () => console.log(`app backend is running on port ${port}`))
 
 async function test() {
-  const auth = await getAuth()
-  console.log(auth)
+  // const auth = await restTokenAuth()
+  // console.log(auth)
+  createSoapClient()
 }
 
-// test()
+test()

@@ -1,7 +1,7 @@
 import * as axios from 'axios'
 import { base64StringEncode } from '../util/util'
 
-export const getAuth = ():Promise<AccessTokenResponse> => {
+export const restTokenAuth = ():Promise<AccessTokenResponse> => {
   const cliendId = process.env.ALLEGRO_CLIENT_ID
   const clientSecret = process.env.ALLEGRO_CLIENT_SECRET
   const ALLEGRO_URL = process.env.ALLEGRO_URL
