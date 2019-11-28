@@ -1,20 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "outDir": "dist",
-    "strict": true,
-    "baseUrl": "./",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "types": [
-      "node"
-    ],
-    "esModuleInterop": true,
-    "inlineSourceMap": true
-  },
-  "include": [
-    "src"
-  ]
+    "sourceMap": true,
+    "lib": [ "es2015" ]
+  }
 }
