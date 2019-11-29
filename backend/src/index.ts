@@ -1,5 +1,6 @@
 import { restTokenAuth } from "./allegroHandlers/restAuth"
-import { createSoapClient } from "./allegroHandlers/soapAuth"
+import { createSoapClient, doLoginWithAccessToken } from "./allegroHandlers/soapAuth"
+import { getOfferBids, processOfferData } from "./allegroHandlers/offerData"
 
 const app = require('express')()
 
@@ -33,12 +34,24 @@ app.use((err, req, res, next) => {
 })
 
 const port = process.env.PORT || 5000
-app.listen(port, () => console.log(`app backend is running on port ${port}`))
+// app.listen(port, () => console.log(`app backend is running on port ${port}`))
 
 async function test() {
   // const auth = await restTokenAuth()
   // console.log(auth)
-  createSoapClient()
+  const accessToken = process.env.ALLEGRO_TEMP_TOKEN
+  const soapClient = await createSoapClient(accessToken)
+  const webApiSession = await doLoginWithAccessToken(soapClient, accessToken)
+  const offerId = 8626300812
+  // const offerId = 8629469481
+  const offerData = await getOfferBids(soapClient, webApiSession.sessionHandlePart, offerId)
+  const processedData = processOfferData(offerData)
+  const response = {
+    timestamp: Date.now(),
+    offer: offerId,
+    data: processedData
+  }
+  console.log(response)
 }
 
 test()
