@@ -1,4 +1,5 @@
 import * as soap from 'soap'
+import { appState } from '..';
 
 export const createSoapClient = () => {
     return new Promise((resolve, reject) => {
@@ -34,4 +35,10 @@ export interface IdoLoginWithAccessTokenResponse {
     sessionHandlePart: string
     userId: string
     serverTime: string
+}
+
+export const login = async () => {
+    const accessToken = process.env.ALLEGRO_TEMP_TOKEN
+    const s = await doLoginWithAccessToken(appState.soapClient, accessToken)
+    appState.webapiSession = s.sessionHandlePart
 }

@@ -1,4 +1,4 @@
-import { createSoapClient, doLoginWithAccessToken } from "./allegroHandlers/soapAuth"
+import { createSoapClient, doLoginWithAccessToken, login } from "./allegroHandlers/soapAuth"
 import { getOfferBids, processOfferData } from "./allegroHandlers/offerData"
 
 const app = require('express')()
@@ -40,12 +40,6 @@ export const appState = {
   webapiSession: '',
   offerData: [],
   soapClient: undefined
-}
-
-const login = async () => {
-  const accessToken = process.env.ALLEGRO_TEMP_TOKEN
-  const s = await doLoginWithAccessToken(appState.soapClient, accessToken)
-  appState.webapiSession = s.sessionHandlePart
 }
 
 const startup = async () => {
