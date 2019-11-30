@@ -1,14 +1,14 @@
 import * as soap from 'soap'
 
-export const createSoapClient = (accessToken: string) => {
+export const createSoapClient = () => {
     return new Promise((resolve, reject) => {
         try {
             const url = process.env.ALLEGRO_WDSL_URL
-            soap.createClient(url, function(err, client) {
-               resolve(client)
+            soap.createClient(url, function (err, client) {
+                resolve(client)
             });
         }
-        catch(e){
+        catch (e) {
             reject(e)
         }
     });
@@ -20,11 +20,11 @@ export const doLoginWithAccessToken = (client: any, accessToken: string) => {
             accessToken: accessToken,
             countryCode: 1,
             webapiKey: process.env.ALLEGRO_WEBAPI_KEY
-            }, function(err, result) {
-                if(err){
-                    reject(err)
-                } else {
-                    resolve(result)
+        }, function (err, result) {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(result)
             }
         });
     });

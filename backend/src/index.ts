@@ -1,4 +1,3 @@
-import { restTokenAuth } from "./allegroHandlers/restAuth"
 import { createSoapClient, doLoginWithAccessToken } from "./allegroHandlers/soapAuth"
 import { getOfferBids, processOfferData } from "./allegroHandlers/offerData"
 
@@ -11,6 +10,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/health', require('./routes/health.ts'))
+app.use('/offerdata', require('./routes/offerData.ts'))
 
 app.use((req, res) => {
   res
@@ -36,15 +36,33 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 5000
 // app.listen(port, () => console.log(`app backend is running on port ${port}`))
 
-async function test() {
-  // const auth = await restTokenAuth()
-  // console.log(auth)
+export const appState = {
+  webapiSession: '',
+  offerData: [],
+  soapClient: undefined
+}
+
+const login = async () => {
   const accessToken = process.env.ALLEGRO_TEMP_TOKEN
-  const soapClient = await createSoapClient(accessToken)
-  const webApiSession = await doLoginWithAccessToken(soapClient, accessToken)
+  const s = await doLoginWithAccessToken(appState.soapClient, accessToken)
+  appState.webapiSession = s.sessionHandlePart
+}
+
+const startup = async () => {
+  appState.soapClient = await createSoapClient()
+  await login()
+  app.listen(port, () => console.log(`app backend is running on port ${port}`))
+}
+
+async function test() {
+  appState.soapClient = await createSoapClient()
+  await login()
   const offerId = 8626300812
   // const offerId = 8629469481
-  const offerData = await getOfferBids(soapClient, webApiSession.sessionHandlePart, offerId)
+  const offerData: any = await getOfferBids(appState.soapClient, appState.webapiSession, offerId)
+  if (offerData.body && offerData.body.includes('ERR_NO_SESSION')) {
+    console.log('no session > try again')
+  }
   const processedData = processOfferData(offerData)
   const response = {
     timestamp: Date.now(),
@@ -54,4 +72,5 @@ async function test() {
   console.log(response)
 }
 
-test()
+// test()
+startup()
