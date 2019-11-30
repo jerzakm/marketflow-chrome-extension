@@ -1,9 +1,11 @@
 import { createSoapClient, doLoginWithAccessToken, login } from "./allegroHandlers/soapAuth"
 import { getOfferBids, processOfferData } from "./allegroHandlers/offerData"
+import * as https from 'https'
+import * as fs from 'fs'
+require('dotenv').config({ path: '.env' })
 
 const app = require('express')()
 
-require('dotenv').config({ path: '.env' })
 
 app.get('/', (req, res) => {
   res.end('hello world!')
@@ -42,10 +44,21 @@ export const appState = {
   soapClient: undefined
 }
 
+app.get('/', function (req, res) {
+  res.send('hello world')
+})
+
 const startup = async () => {
   appState.soapClient = await createSoapClient()
   await login()
-  app.listen(port, () => console.log(`app backend is running on port ${port}`))
+
+  https.createServer({
+    key: fs.readFileSync('server.key').toString(),
+    cert: fs.readFileSync('server.cert').toString()
+  }, app)
+    .listen(port, function () {
+      console.log(`mf backend listening on ${port}`)
+    })
 }
 
 async function test() {

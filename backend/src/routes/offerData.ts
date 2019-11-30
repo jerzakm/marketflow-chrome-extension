@@ -8,7 +8,7 @@ const router = express.Router()
 router.get('/:id', async (req, res) => {
   const offerId = req.params.id
 
-  let offerData: any = await getOfferBids(appState.soapClient, 'k', offerId)
+  let offerData: any = await getOfferBids(appState.soapClient, appState.webapiSession, offerId)
   if (offerData.body && offerData.body.includes('ERR_NO_SESSION')) {
     console.log('no session > try again')
     await login()
