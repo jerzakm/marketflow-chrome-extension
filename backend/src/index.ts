@@ -2,15 +2,16 @@ import { createSoapClient, doLoginWithAccessToken, login } from "./allegroHandle
 import { getOfferBids, processOfferData } from "./allegroHandlers/offerData"
 import * as https from 'https'
 import * as fs from 'fs'
+var cors = require('cors');
 require('dotenv').config({ path: '.env' })
 
 const app = require('express')()
 
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.end('hello world!')
 })
-
 app.use('/health', require('./routes/health.ts'))
 app.use('/offerdata', require('./routes/offerData.ts'))
 
