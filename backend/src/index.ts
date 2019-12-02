@@ -1,4 +1,4 @@
-import { createSoapClient, doLoginWithAccessToken, login, refreshToken } from "./allegroHandlers/soapAuth"
+import { createSoapClient, doLoginWithAccessToken, login } from "./allegroHandlers/soapAuth"
 import * as bodyParser from 'body-parser'
 import { IAllegroAuthResponse } from "./routes/auth"
 import { refreshAuth } from "./allegroHandlers/refresh";
