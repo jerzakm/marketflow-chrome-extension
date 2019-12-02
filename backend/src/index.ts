@@ -40,7 +40,7 @@ app.use((err, req, res, next) => {
     .json(error)
 })
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 443
 // app.listen(port, () => console.log(`app backend is running on port ${port}`))
 
 interface IAppState {
