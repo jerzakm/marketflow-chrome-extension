@@ -22,6 +22,12 @@ router.post('/:code', async (req, res) => {
   })
 })
 
+router.get('/', (req, res) => {
+  res.json({
+    url: `https://allegro.pl/auth/oauth/authorize?response_type=code&client_id=${process.env.ALLEGRO_API_CLIENT_ID}&redirect_uri=${process.env.ALLEGRO_APP_REDIRECT_URI}`
+  })
+})
+
 export const authorizeCode = (code: string): Promise<IAllegroAuthResponse> => {
   return new Promise((resolve, reject) => {
     axios.default({
