@@ -2,14 +2,14 @@ import * as Chart from 'chart.js'
 import { getOfferdata, findOfferId, weekly3monthsBin } from './contentScript/offerData';
 
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-    if (msg.color) {
-        console.log('Receive color = ' + msg.color);
-        document.body.style.backgroundColor = msg.color;
-        sendResponse('Change color to ' + msg.color);
-    } else {
-        sendResponse('Color message is none.');
-    }
-    const a = $.ajax;
+    // if (msg.color) {
+    //     console.log('Receive color = ' + msg.color);
+    //     document.body.style.backgroundColor = msg.color;
+    //     sendResponse('Change color to ' + msg.color);
+    // } else {
+    //     sendResponse('Color message is none.');
+    // }
+    // const a = $.ajax;
 });
 
 const injectExtension = async () => {
@@ -31,44 +31,49 @@ injectExtension()
 
 function makeLayout(data) {
 
-    let layoutNode = document.createElement("div")
+    const layoutNode = document.createElement("div")
     layoutNode.setAttribute("id", "scroogeStatGallery")
     layoutNode.style.cssText = "max-width: 1248px; margin-left: auto; margin-right: auto; width: 100%; margin-bottom: 16px;"
 
 
-    let css = "<style>    #scrooge-chart-container-grid { grid-area: chart; }    #scrooge-stat-container-grid { grid-area: stat; }  #scrooge-grid-container {   display: grid;    grid-template-areas: 'chart chart chart chart chart chart chart stat';      grid-gap: 15px;      background-color: #eceff1;      padding: 0px;    }        #scrooge-grid-container > div {      background-color: rgba(255, 255, 255, 0.9);      padding: 20px 0;    }    </style>    "
+    const css = "<style>    #scrooge-chart-container-grid { grid-area: chart; }    #scrooge-stat-container-grid { grid-area: stat; }  #scrooge-grid-container {   display: grid;    grid-template-areas: 'chart chart chart chart chart chart chart stat';      grid-gap: 15px;      background-color: #eceff1;      padding: 0px;    }        #scrooge-grid-container > div {      background-color: rgba(255, 255, 255, 0.9);      padding: 20px 0;    }    </style>    "
 
     layoutNode.innerHTML += css
 
-    let gridNode = document.createElement("div")
+    const gridNode = document.createElement("div")
     gridNode.setAttribute("id", "scrooge-grid-container")
 
-    let chartGridNode = document.createElement("div")
+    const chartGridNode = document.createElement("div")
     chartGridNode.setAttribute("id", "scrooge-chart-container-grid")
     gridNode.appendChild(chartGridNode)
 
-    let statGridNode = document.createElement("div")
+    const statGridNode = document.createElement("div")
     statGridNode.setAttribute("id", "scrooge-stat-container-grid")
 
-    let statGrid = document.createElement("div");
+    const statGrid = document.createElement("div");
     statGridNode.appendChild(statGrid);
 
-    let statCss = "<style> #scrooge-stat-container-grid{ font-family: Open Sans,sans-serif;}          .scroogeStatDesc {  width:160px;       color: #767676; float:left; padding-left: 10px;  padding-right: 10px;}      .scroogeStatVal {  padding-left: 10px;        color: #222;      }</style>";
+    const statCss = "<style> #scrooge-stat-container-grid{ font-family: Open Sans,sans-serif;}          .scroogeStatDesc {  width:160px;       color: #767676; float:left; padding-left: 10px;  padding-right: 10px;}      .scroogeStatVal {  padding-left: 10px;        color: #222;      }</style>";
     statGrid.innerHTML += statCss;
-    statGridNode.innerHTML += '<div class="scroogeStatDesc">Najniższa cena:</div><div class="scroogeStatVal">' + data.lowPrice + ' zł</div>';
-    statGridNode.innerHTML += '<div class="scroogeStatDesc">Najwyższa cena:</div><div class="scroogeStatVal">' + data.highPrice + ' zł</div>';
-    statGridNode.innerHTML += '<div class="scroogeStatDesc">Średnia cena:</div><div class="scroogeStatVal">' + data.averagePrice + ' zł</div>';
-    statGridNode.innerHTML += '<div class="scroogeStatDesc">Wartość sprzedaży:</div><div class="scroogeStatVal">' + data.totalValue.toFixed(0) + ' zł</div>';
-    statGridNode.innerHTML += '<div class="scroogeStatDesc">Sprzedane sztuki:</div><div class="scroogeStatVal">' + data.totalQuantity + ' </div>';
+    // statGridNode.innerHTML += '<div class="scroogeStatDesc">Najniższa cena:</div><div class="scroogeStatVal">' + data.lowPrice + ' zł</div>';
+    // statGridNode.innerHTML += '<div class="scroogeStatDesc">Najwyższa cena:</div><div class="scroogeStatVal">' + data.highPrice + ' zł</div>';
+    // statGridNode.innerHTML += '<div class="scroogeStatDesc">Średnia cena:</div><div class="scroogeStatVal">' + data.averagePrice + ' zł</div>';
+    // statGridNode.innerHTML += '<div class="scroogeStatDesc">Wartość sprzedaży:</div><div class="scroogeStatVal">' + data.totalValue.toFixed(0) + ' zł</div>';
+    // statGridNode.innerHTML += '<div class="scroogeStatDesc">Sprzedane sztuki:</div><div class="scroogeStatVal">' + data.totalQuantity + ' </div>';
+    statGrid.innerHTML += ` <div class="scroogeStatDesc">Najniższa cena:</div><div class="scroogeStatVal">${data.lowPrice} zł</div>
+                            <div class="scroogeStatDesc">Najwyższa cena:</div><div class="scroogeStatVal">${data.highPrice} zł</div>
+                            <div class="scroogeStatDesc">Średnia cena:</div><div class="scroogeStatVal">${data.averagePrice} zł</div>
+                            <div class="scroogeStatDesc">Wartość sprzedaży:</div><div class="scroogeStatVal">${data.totalValue.toFixed(0)} zł</div>
+                            <div class="scroogeStatDesc">Sprzedane sztuki:</div><div class="scroogeStatVal">${data.totalQuantity} </div>`
 
-    gridNode.appendChild(statGridNode);
+    gridNode.appendChild(statGridNode)
 
-    let canvasContainer = document.createElement("div")
+    const canvasContainer = document.createElement("div")
     canvasContainer.setAttribute("id", "scroogeChartContainer")
-    canvasContainer.style.width = '100%';
+    canvasContainer.style.width = '100%'
     canvasContainer.style.height = '375px'
 
-    let canvas = document.createElement('canvas')
+    const canvas = document.createElement('canvas')
     canvas.id = "myChart"
     canvas.width = 5
     canvas.height = 2
@@ -92,42 +97,28 @@ function renderChart(canvas, data) {
     console.log(data)
     const ctx = canvas.getContext('2d');
     const myChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: data.date,
             datasets: [
                 {
                     label: 'Średnia cena',
                     data: data.avgPrice,
-                    type: 'line',
                     backgroundColor: 'rgba(200, 50, 50, 0.0)',
                     borderColor: 'rgba(255, 100, 0, 1)',
                     borderWidth: 1,
-                    yAxisID: 'first-y-axis',
+                    yAxisID: 'avgPriceAxes',
                     radius: 1,
-                    lineTension: 0.15,
-                    steppedLine: false
+                    lineTension: 0.0,
+                    steppedLine: false,
+                    order: 1
                 },
-                // {
-                //     label: 'Sprzedaż (PLN)',
-                //     data: data.value,
-                //     type: 'line',
-                //     borderColor: 'rgba(255, 255, 255, 1)',
-                //     borderWidth: 1,
-                //     yAxisID: 'fake-axis',
-                //     showLine: false,
-                //     pointStyle: 'rectRot',
-                //     radius: 0
-                // },
-                // {
-                //     label: 'Sprzedaż (szt.)',
-                //     data: data.quantity,
-                //     type: 'bar',
-                //     backgroundColor: 'rgba(66, 35, 123, 0.9)',
-                //     borderColor: 'rgba(255, 255, 255, 1)',
-                //     borderWidth: 1,
-                //     yAxisID: 'second-y-axis'
-                // }
+                {
+                    label: 'Sprzedaż (szt.)',
+                    data: data.quantity,
+                    yAxisID: 'avgPriceAxes',
+                    order: 2
+                }
             ]
         },
         options: {
@@ -143,44 +134,21 @@ function renderChart(canvas, data) {
             scales: {
                 yAxes: [
                     {
-                        id: 'first-y-axis',
+                        id: 'avgPriceAxes',
                         type: 'linear',
                         position: 'left',
                         gridLines: {
                             display: false
                         },
                         ticks: {
-                            min: Math.round(data.lowPrice * 0.8),
+                            min: 0,
                             suggestedMax: Math.round(data.highPrice * 1.2)
                         },
                         scaleLabel: {
                             display: true,
                             labelString: 'Średnia cena'
                         }
-                    },
-                    // {
-                    //     id: 'fake-axis',
-                    //     type: 'linear',
-                    //     position: 'right',
-                    //     gridLines: {
-                    //         display: false
-                    //     },
-                    //     display: true,
-                    //     scaleLabel: {
-                    //         display: true,
-                    //         labelString: 'Sprzedaż (PLN)'
-                    //     }
-                    // },
-                    // {
-                    //     id: 'second-y-axis',
-                    //     type: 'linear',
-                    //     position: 'right',
-                    //     display: false,
-                    //     scaleLabel: {
-                    //         display: true,
-                    //         labelString: 'Sprzedaż (szt.)'
-                    //     }
-                    // }
+                    }
                 ]
             }
         }
