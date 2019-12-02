@@ -26,6 +26,7 @@ export const doLoginWithAccessToken = (client: any, accessToken: string) => {
                 reject(err)
             } else {
                 resolve(result)
+                console.log(result)
             }
         });
     });
@@ -38,7 +39,6 @@ export interface IdoLoginWithAccessTokenResponse {
 }
 
 export const login = async () => {
-    const accessToken = process.env.ALLEGRO_TEMP_TOKEN
-    const s = await doLoginWithAccessToken(appState.soapClient, accessToken)
+    const s = await doLoginWithAccessToken(appState.soapClient, appState.apiAuth.access_token)
     appState.webapiSession = s.sessionHandlePart
 }

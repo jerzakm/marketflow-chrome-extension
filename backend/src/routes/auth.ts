@@ -2,6 +2,7 @@ import * as express from 'express'
 import * as axios from 'axios'
 import { appState } from '..'
 import { base64StringEncode } from '../util/util'
+import { login } from '../allegroHandlers/soapAuth'
 
 const router = express.Router()
 
@@ -9,6 +10,7 @@ router.post('/', async (req, res) => {
   if (req.body.code) {
     const auth = await authorizeCode(req.body.code)
     appState.apiAuth = auth
+    await login()
   }
 
   res.json({
@@ -20,7 +22,7 @@ export const authorizeCode = (code: string): Promise<IAllegroAuthResponse> => {
   return new Promise((resolve, reject) => {
     axios.default({
       method: 'get',
-      url: `https://allegro.pl/auth/oauth/token?grant_type=authorization_code&code=${code}&redirect_uri=http://localhost:8080/`,
+      url: `https://allegro.pl/auth/oauth/token?grant_type=authorization_code&code=${code}&redirect_uri=${process.env.ALLEGRO_APP_REDIRECT_URI}`,
       headers: {
         Authorization: `Basic ${base64StringEncode(`${process.env.ALLEGRO_API_CLIENT_ID}:${process.env.ALLEGRO_API_CLIENT_SECRET}`)}`
       }
