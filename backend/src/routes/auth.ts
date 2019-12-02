@@ -1,20 +1,24 @@
 import * as express from 'express'
 import * as axios from 'axios'
+
+import * as fs from 'fs'
 import { appState } from '..'
 import { base64StringEncode } from '../util/util'
 import { login } from '../allegroHandlers/soapAuth'
 
 const router = express.Router()
 
-router.post('/', async (req, res) => {
-  if (req.body.code) {
-    const auth = await authorizeCode(req.body.code)
+router.post('/:code', async (req, res) => {
+  const code = req.params.code
+  if (code) {
+    const auth = await authorizeCode(code)
     appState.apiAuth = auth
     await login()
+    // saveAuth()
   }
 
   res.json({
-    status: req.body.code ? 'code received' : 'no code'
+    status: code ? 'code received' : 'no code'
   })
 })
 

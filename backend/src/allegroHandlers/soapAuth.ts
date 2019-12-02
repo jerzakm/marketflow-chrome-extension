@@ -39,6 +39,7 @@ export interface IdoLoginWithAccessTokenResponse {
 }
 
 export const login = async () => {
+    console.log('logging in to webApi with access token')
     const s = await doLoginWithAccessToken(appState.soapClient, appState.apiAuth.access_token)
     appState.webapiSession = s.sessionHandlePart
 }

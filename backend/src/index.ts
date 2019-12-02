@@ -1,9 +1,7 @@
-import { createSoapClient, doLoginWithAccessToken, login } from "./allegroHandlers/soapAuth"
-import { getOfferBids, processOfferData } from "./allegroHandlers/offerData"
-import * as https from 'https'
-import * as fs from 'fs'
+import { createSoapClient, doLoginWithAccessToken, login, refreshToken } from "./allegroHandlers/soapAuth"
 import * as bodyParser from 'body-parser'
 import { IAllegroAuthResponse } from "./routes/auth"
+import { refreshAuth } from "./allegroHandlers/refresh";
 
 var cors = require('cors');
 require('dotenv').config({ path: '.env' })
@@ -59,34 +57,17 @@ app.get('/', function (req, res) {
 
 const startup = async () => {
   appState.soapClient = await createSoapClient()
-  await login()
-
-  https.createServer({
-    key: fs.readFileSync('server.key').toString(),
-    cert: fs.readFileSync('server.cert').toString()
-  }, app)
-    .listen(port, function () {
-      console.log(`mf backend listening on ${port}`)
-    })
+  console.log(`auth on: https://allegro.pl/auth/oauth/authorize?response_type=code&client_id=${process.env.ALLEGRO_API_CLIENT_ID}&redirect_uri=${process.env.ALLEGRO_APP_REDIRECT_URI}`)
+  app.listen(port, () => console.log(`listening on ${port}`))
+  refreshTokenJob(60)
 }
 
-async function test() {
-  appState.soapClient = await createSoapClient()
-  await login()
-  const offerId = 8626300812
-  // const offerId = 8629469481
-  const offerData: any = await getOfferBids(appState.soapClient, appState.webapiSession, offerId)
-  if (offerData.body && offerData.body.includes('ERR_NO_SESSION')) {
-    console.log('no session > try again')
-  }
-  const processedData = processOfferData(offerData)
-  const response = {
-    timestamp: Date.now(),
-    offer: offerId,
-    data: processedData
-  }
-  console.log(response)
+async function refreshTokenJob(minutes: number) {
+  setInterval(async function () {
+    if (appState.apiAuth) {
+      console.log('refreshing access token')
+      refreshAuth(appState.apiAuth.refresh_token)
+    }
+  }, minutes * 60 * 1000);
 }
-
-// test()
 startup()

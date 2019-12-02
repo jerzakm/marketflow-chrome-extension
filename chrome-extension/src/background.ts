@@ -1,7 +1,9 @@
+import { getOfferdata } from "./contentScript/offerData";
 
-function polling() {
-    console.log('polling');
-    setTimeout(polling, 1000 * 30);
-}
-
-polling();
+chrome.runtime.onMessage.addListener(
+    async function (request, sender, sendResponse) {
+        if (request.offerId) {
+            const offerData = await getOfferdata(request.offerId)
+            sendResponse({ offerData });
+        }
+    });
