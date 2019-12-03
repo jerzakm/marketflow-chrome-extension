@@ -25,6 +25,7 @@
   },
 
   "permissions": [
+    "webNavigation",
     "storage",
     "<all_urls>"
   ]

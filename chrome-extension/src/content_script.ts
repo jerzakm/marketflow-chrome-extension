@@ -1,5 +1,5 @@
 import * as Chart from 'chart.js'
-import { getOfferdata, findOfferId, weekly3monthsBin } from './contentScript/offerData';
+import { findOfferId, weekly3monthsBin } from './contentScript/offerData';
 
 const injectExtension = async () => {
     const element = document.querySelector('[data-box-name="Links-carousel card"]')
@@ -9,17 +9,39 @@ const injectExtension = async () => {
     node.style.maxWidth = '100vw'
     element.prepend(node)
 
-    const offerId = findOfferId()
-    // const offerData = await getOfferdata(offerId)
-    // const chartData = weekly3monthsBin(offerData)
-    chrome.runtime.sendMessage({ offerId }, function (response) {
-        console.log(response.offerData);
-    });
-    // const layout = makeLayout(chartData)
-    // node.appendChild(layout)
+    const offerId = findOfferId();
+    let fetching = true
+    let offerData
+
+    while (fetching) {
+        await sleep(10)
+        console.log('sleeping')
+        offerData = await getDataFromStorage(offerId)
+        if (offerData) {
+            fetching = false
+            console.log('got offerdata')
+            console.log(offerData)
+        }
+    }
+
+    const chartData = weekly3monthsBin(offerData[`${offerId}`])
+    const layout = makeLayout(chartData)
+    node.appendChild(layout)
 }
 
 injectExtension()
+
+function getDataFromStorage(offerId) {
+    return new Promise(function (resolve, reject) {
+        chrome.storage.local.get([offerId], function (result) {
+            let l = Object.keys(result).length;
+            if (l < 1) {
+                reject('data not found');
+            }
+            resolve(result);
+        });
+    });
+}
 
 function makeLayout(data) {
 
@@ -56,7 +78,8 @@ function makeLayout(data) {
                             <div class="scroogeStatDesc">Najwyższa cena:</div><div class="scroogeStatVal">${data.highPrice} zł</div>
                             <div class="scroogeStatDesc">Średnia cena:</div><div class="scroogeStatVal">${data.averagePrice} zł</div>
                             <div class="scroogeStatDesc">Wartość sprzedaży:</div><div class="scroogeStatVal">${data.totalValue.toFixed(0)} zł</div>
-                            <div class="scroogeStatDesc">Sprzedane sztuki:</div><div class="scroogeStatVal">${data.totalQuantity} </div>`
+                            <div class="scroogeStatDesc">Sprzedane sztuki:</div><div class="scroogeStatVal">${data.totalQuantity} </div>
+                            `
 
     gridNode.appendChild(statGridNode)
 
@@ -94,7 +117,7 @@ function renderChart(canvas, data) {
             labels: data.date,
             datasets: [
                 {
-                    label: 'Średnia cena',
+                    label: 'Średnia cena sprzedanych produktów',
                     data: data.avgPrice,
                     backgroundColor: 'rgba(200, 50, 50, 0.0)',
                     borderColor: 'rgba(255, 100, 0, 1)',
@@ -146,4 +169,8 @@ function renderChart(canvas, data) {
         }
     });
 
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

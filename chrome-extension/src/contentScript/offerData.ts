@@ -1,13 +1,9 @@
 import * as moment from 'moment'
 
-export const getOfferdata = async (offerId: number | string) => {
-  const offerData = await (await fetch(`https://localhost:5000/offerdata/${offerId}`)).json()
-  return offerData
-}
-
-export const findOfferId = () => {
+export const findOfferId = (url?: string) => {
   //regex approach
-  const regexMatch = `${window.location.href}`.match(/\d{10}/g)
+  const sUrl = url ? url : window.location.href
+  const regexMatch = sUrl.match(/\d{10}/g)
   const offerId = regexMatch.length > 0 ? regexMatch[0] : undefined
 
   //TODO alternative body search approach
